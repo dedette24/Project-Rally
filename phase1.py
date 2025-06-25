@@ -7,7 +7,7 @@ from geopy.distance import geodesic
 debut = (49.060418927265914, 1.5994303744710572)
 fin = (49.06855955197321, 1.6009684049876223)
 
-DISTANCE = 25
+DISTANCE = 20
 
 def calcul_angle(v1, v2):
     norm_v1 = np.linalg.norm(v1)
@@ -172,7 +172,7 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
 
         i = j  # saut des points du virage
 
-    # Marquage des points noirs
+    """# Marquage des points noirs
     for lon, lat in coordinates:
         folium.CircleMarker(
             location=(lat, lon),
@@ -180,7 +180,7 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
             color="black",
             fill=True,
             fill_opacity=0.6
-        ).add_to(carte)
+        ).add_to(carte)"""
 
     carte.save("rendu_html/carte_rally_avec_tous_points.html")
     print("✅ Carte créée : carte_rally_avec_tous_points.html")
