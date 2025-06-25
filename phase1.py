@@ -7,7 +7,7 @@ from geopy.distance import geodesic
 debut = (49.060418927265914, 1.5994303744710572)
 fin = (49.06855955197321, 1.6009684049876223)
 
-DISTANCE = 50
+DISTANCE = 25
 
 def calcul_angle(v1, v2):
     norm_v1 = np.linalg.norm(v1)
@@ -57,7 +57,6 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
     import openrouteservice
     import numpy as np
 
-    # === Appel API OpenRouteService ===
     api_key = "5b3ce3597851110001cf6248a792bc3d7c544a5988c36630a5d760a2"
     client = openrouteservice.Client(key=api_key)
 
@@ -67,24 +66,20 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
         format='geojson'
     )
 
-    # === Récupérer et interpoler les coordonnées ===
     coordinates = route['features'][0]['geometry']['coordinates']
-    coordinates = interpoler_points(coordinates, distance=DISTANCE)  # Rééchantillonnage tous les 50m
+    coordinates = interpoler_points(coordinates, distance=DISTANCE)
 
-    # === Création de la carte ===
     carte = folium.Map(location=depart_coordonne, zoom_start=15)
     folium.GeoJson(route, name='route').add_to(carte)
     folium.Marker(depart_coordonne, popup="Départ", icon=folium.Icon(color="green")).add_to(carte)
     folium.Marker(arrive_coordonne, popup="Arrivée", icon=folium.Icon(color="red")).add_to(carte)
 
-    # === Initialisation des données à retourner ===
     roadbook = []
     full_point_data = []
 
-    # === Regroupement des virages continus ===
     i = 1
-    seuil_angle_min = 10        # ignore les micro-changements
-    seuil_angle_total = 20      # angle cumulé minimal pour considérer un virage
+    seuil_angle_min = 10
+    seuil_angle_total = 20
 
     while i < len(coordinates) - 1:
         p0 = np.array(coordinates[i - 1])
@@ -105,7 +100,6 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
         angle_total = angle
         j = i + 1
 
-        # Regrouper les virages dans la même direction
         while j < len(coordinates) - 1:
             p_prev = np.array(coordinates[j - 1])
             p_curr = np.array(coordinates[j])
@@ -127,7 +121,6 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
             else:
                 break
 
-        # Ne rien marquer si pas assez de courbure
         if angle_total < seuil_angle_total:
             i += 1
             continue
@@ -135,7 +128,7 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
         lat, lon = coordinates[i][1], coordinates[i][0]
         angle_final = int(angle_total)
 
-        # Classification copilote selon angle cumulé
+        # Couleur + note
         if angle_final < 30:
             note = f"{direction} 6"
             color = "lightgreen"
@@ -153,67 +146,42 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
             color = "red"
         else:
             note = f"épingle {direction} | 1"
-            color = "darkred"
+            color = "#800000"  # bordeaux
 
         roadbook.append((lat, lon, note, angle_final))
         full_point_data.append((lat, lon, note, angle_final))
 
-        # Marqueur
         folium.Marker(
             location=(lat, lon),
             popup=f"{note} ({angle_final}°)",
             icon=folium.Icon(color=color, icon="flag", prefix="fa")
         ).add_to(carte)
 
-        i = j  # sauter les points déjà analysés dans le regroupement
+        # Tracer tous les segments du virage en couleur uniforme
+        for k in range(i - 1, j):
+            if k < 0 or k + 1 >= len(coordinates):
+                continue
+            lon1, lat1 = coordinates[k]
+            lon2, lat2 = coordinates[k + 1]
+            folium.PolyLine(
+                locations=[(lat1, lon1), (lat2, lon2)],
+                color=color,
+                weight=5,
+                opacity=0.9
+            ).add_to(carte)
 
-    # === Colorer les segments entre les points selon l’angle ===
-    for i in range(1, len(coordinates) - 1):
-        p0 = np.array(coordinates[i - 1])
-        p1 = np.array(coordinates[i])
-        p2 = np.array(coordinates[i + 1])
+        i = j  # saut des points du virage
 
-        v1 = p1 - p0
-        v2 = p2 - p1
-        angle = calcul_angle(v1, v2)
-        if np.isnan(angle):
-            continue
-
-        # Choix de couleur selon l’angle
-        if angle < 10:
-            seg_color = "bleu"
-        elif angle < 30:
-            seg_color = "lightgreen"
-        elif angle < 60:
-            seg_color = "green"
-        elif angle < 90:
-            seg_color = "orange"
-        elif angle < 120:
-            seg_color = "red"
-        elif angle < 150:
-            seg_color = "darkred"
-        else:
-            seg_color = "#800000"  # bordeaux = épingle
-
-        # Tracer le segment p0 → p1
-        folium.PolyLine(
-            locations=[(p0[1], p0[0]), (p1[1], p1[0])],
-            color=seg_color,
-            weight=5,
-            opacity=0.8
-        ).add_to(carte)
-
-    # === Ajouter tous les points GPS bruts (points noirs) ===
+    # Marquage des points noirs
     for lon, lat in coordinates:
         folium.CircleMarker(
             location=(lat, lon),
-            radius=3,
+            radius=2,
             color="black",
             fill=True,
-            fill_opacity=0.7
+            fill_opacity=0.6
         ).add_to(carte)
 
-    # Enregistrement de la carte
     carte.save("rendu_html/carte_rally_avec_tous_points.html")
     print("✅ Carte créée : carte_rally_avec_tous_points.html")
 

@@ -78,8 +78,9 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
     full_point_data = []
 
     i = 1
-    seuil_angle_min = 10
-    seuil_angle_total = 20
+    seuil_angle_min = 15  # Augmenté de 10 à 15
+    seuil_angle_total = 30  # Augmenté de 20 à 30
+    distance_max_virage = 200  # NOUVEAU: Distance maximale pour considérer un virage (en mètres)
 
     while i < len(coordinates) - 1:
         p0 = np.array(coordinates[i - 1])
@@ -90,15 +91,16 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
         v2 = p2 - p1
 
         angle = calcul_angle(v1, v2)
-        if np.isnan(angle):
+        if np.isnan(angle) or angle < seuil_angle_min:  # Filtrer dès le départ les petits angles
             i += 1
             continue
 
         cross = np.cross(v1, v2)
-        direction = "left" if cross > 0 else "right"
+        direction = "gauche" if cross > 0 else "droite"
 
         angle_total = angle
         j = i + 1
+        distance_totale_virage = 0  # NOUVEAU: Suivre la distance du virage
 
         # Regroupement des points du virage
         while j < len(coordinates) - 1:
@@ -106,22 +108,36 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
             p_curr = np.array(coordinates[j])
             p_next = np.array(coordinates[j + 1])
 
+            # NOUVEAU: Calculer la distance parcourue dans le virage
+            distance_segment = distance_geodesique(p_prev, p_curr)
+            distance_totale_virage += distance_segment
+            
+            # NOUVEAU: Arrêter si le virage devient trop long (probablement une ligne droite)
+            if distance_totale_virage > distance_max_virage:
+                break
+
             v_prev = p_curr - p_prev
             v_next = p_next - p_curr
 
             a = calcul_angle(v_prev, v_next)
-            if np.isnan(a):
+            if np.isnan(a) or a < seuil_angle_min:  # Filtrer les petits angles
                 break
 
             c = np.cross(v_prev, v_next)
-            
-            d = "left"  if c > 0 else "droite"
+            d = "gauche" if c > 0 else "droite"
 
-            if d == direction and a >= seuil_angle_min:
+            if d == direction:
                 angle_total += a
                 j += 1
             else:
                 break
+
+        # NOUVEAU: Vérifier aussi le ratio angle/distance pour éviter les faux virages
+        if distance_totale_virage > 0:
+            ratio_angle_distance = angle_total / (distance_totale_virage / 10)  # Angle par 10m
+            if ratio_angle_distance < 2:  # Si moins de 2° par 10m, c'est probablement une ligne droite
+                i += 1
+                continue
 
         if angle_total < seuil_angle_total:
             i += 1
@@ -135,44 +151,38 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
 
         angle_final = int(angle_total)
 
-        # Classification copilote
-        if angle_final < 30:
+        # Classification copilote MODIFIÉE avec des seuils plus stricts
+        if angle_final < 45:  # Augmenté de 30 à 45
             note = f"{direction} 6"
             color = "lightgreen"
-            icon = "arrow-up"
-        elif angle_final < 60:
+        elif angle_final < 75:  # Augmenté de 60 à 75
             note = f"{direction} 5"
             color = "green"
-            icon = "arrow-"+str(direction)
-        elif angle_final < 90:
+        elif angle_final < 105:  # Augmenté de 90 à 105
             note = f"{direction} 4"
             color = "orange"
-            icon = "arrow-"+str(direction)
-        elif angle_final < 120:
+        elif angle_final < 135:  # Augmenté de 120 à 135
             note = f"{direction} 3"
             color = "darkorange"
-            icon = "arrow-"+str(direction)
-        elif angle_final < 150:
+        elif angle_final < 165:  # Augmenté de 150 à 165
             note = f"{direction} 2"
             color = "red"
-            icon = "arrow-"+str(direction)
         else:
             note = f"épingle {direction} | 1"
             color = "#800000"
-            icon = "arrow-rotate-"+str(direction)
 
         # Ajouter les 2 marqueurs : début + fin
         folium.Marker(
             location=(point_debut[1], point_debut[0]),
-            popup=f"Début {note}",
-            icon=folium.Icon(color=color, icon=icon, prefix="fa")
+            popup=f"Début {note} (Distance: {distance_totale_virage:.0f}m)",  # NOUVEAU: Afficher la distance
+            icon=folium.Icon(color=color, icon="play", prefix="fa")
         ).add_to(carte)
 
-        '''folium.Marker(
+        folium.Marker(
             location=(point_fin[1], point_fin[0]),
-            popup=f"Fin {note}",
+            popup=f"Fin {note} (Distance: {distance_totale_virage:.0f}m)",  # NOUVEAU: Afficher la distance
             icon=folium.Icon(color=color, icon="stop", prefix="fa")
-        ).add_to(carte)'''
+        ).add_to(carte)
 
         # Ajouter au roadbook
         roadbook.append((point_debut[1], point_debut[0], f"Début {note}", angle_final))
@@ -194,14 +204,14 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
         i = j  # sauter les points déjà traités
 
     # Affichage de tous les points (points noirs)
-    """for lon, lat in coordinates:
+    for lon, lat in coordinates:
         folium.CircleMarker(
             location=(lat, lon),
             radius=2,
             color="black",
             fill=True,
-            fill_opacity=0
-        ).add_to(carte)"""
+            fill_opacity=0.6
+        ).add_to(carte)
 
     carte.save("rendu_html/carte_rally_avec_tous_points.html")
     print("✅ Carte créée : carte_rally_avec_tous_points.html")
