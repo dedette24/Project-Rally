@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_eeb9326d7733ddced6d976cea0c93833 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_eeb9326d7733ddced6d976cea0c93833" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_eeb9326d7733ddced6d976cea0c93833 = L.map(
+                "map_eeb9326d7733ddced6d976cea0c93833",
+                {
+                    center: [49.13279901468811, 1.5477353752570941],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 9,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_92ef4aa68e8fa8e5955839fd655c3edb = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_92ef4aa68e8fa8e5955839fd655c3edb.addTo(map_eeb9326d7733ddced6d976cea0c93833);
+        
+    
+
+        function geo_json_7781bfe9bf0a38cce560f6665c0e004e_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_7781bfe9bf0a38cce560f6665c0e004e = L.geoJson(null, {
+                onEachFeature: geo_json_7781bfe9bf0a38cce560f6665c0e004e_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_7781bfe9bf0a38cce560f6665c0e004e_add (data) {
+            geo_json_7781bfe9bf0a38cce560f6665c0e004e
+                .addData(data);
+        }
+            geo_json_7781bfe9bf0a38cce560f6665c0e004e_add({"bbox": [1.522795, 49.12815, 1.547735, 49.133582], "features": [{"bbox": [1.522795, 49.12815, 1.547735, 49.133582], "geometry": {"coordinates": [[1.547735, 49.1328], [1.547533, 49.132746], [1.547283, 49.132625], [1.545926, 49.132304], [1.544519, 49.131892], [1.544126, 49.131747], [1.54391, 49.131632], [1.543826, 49.131552], [1.543252, 49.130713], [1.543061, 49.130568], [1.542506, 49.130285], [1.540855, 49.129507], [1.540612, 49.129409], [1.540466, 49.129352], [1.539078, 49.128819], [1.538817, 49.128692], [1.538698, 49.128617], [1.538455, 49.128487], [1.538316, 49.12841], [1.537816, 49.12815], [1.537284, 49.128957], [1.53696, 49.129262], [1.536219, 49.129674], [1.535648, 49.130037], [1.535125, 49.130552], [1.534642, 49.130987], [1.533966, 49.131423], [1.533486, 49.131867], [1.533076, 49.13211], [1.532775, 49.132202], [1.531965, 49.132377], [1.523885, 49.133445], [1.522795, 49.133582]], "type": "LineString"}, "properties": {"segments": [{"distance": 2243.5, "duration": 237.7, "steps": [{"distance": 910.7, "duration": 77.8, "instruction": "Head west on D 525", "name": "D 525", "type": 11, "way_points": [0, 19]}, {"distance": 1332.8, "duration": 159.9, "instruction": "Turn sharp right", "name": "-", "type": 3, "way_points": [19, 32]}, {"distance": 0.0, "duration": 0.0, "instruction": "Arrive at your destination, straight ahead", "name": "-", "type": 10, "way_points": [32, 32]}]}], "summary": {"distance": 2243.5, "duration": 237.7}, "way_points": [0, 32]}, "type": "Feature"}], "metadata": {"attribution": "openrouteservice.org | OpenStreetMap contributors", "engine": {"build_date": "2025-06-06T15:39:25Z", "graph_date": "2025-06-23T11:47:36Z", "osm_date": "1970-01-01T00:00:00Z", "version": "9.3.0"}, "query": {"coordinates": [[1.5477353752570941, 49.13279901468811], [1.5227963451258202, 49.133585674333666]], "format": "geojson", "profile": "driving-car", "profileName": "driving-car"}, "service": "routing", "timestamp": 1750866197173}, "type": "FeatureCollection"});
+        geo_json_7781bfe9bf0a38cce560f6665c0e004e.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_7781bfe9bf0a38cce560f6665c0e004e.addTo(map_eeb9326d7733ddced6d976cea0c93833);
+        
+    
+            var marker_8acc76be39297f4a910cfc63f74927d1 = L.marker(
+                [49.13279901468811, 1.5477353752570941],
+                {
+}
+            ).addTo(map_eeb9326d7733ddced6d976cea0c93833);
+        
+    
+            var icon_58f2405762c126d3d6306b5d99c9abac = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8ed46eba252382536d7267938e5d207c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_78e9723681df1a1aae9f01f49e5966d9 = $(`<div id="html_78e9723681df1a1aae9f01f49e5966d9" style="width: 100.0%; height: 100.0%;">Départ</div>`)[0];
+                popup_8ed46eba252382536d7267938e5d207c.setContent(html_78e9723681df1a1aae9f01f49e5966d9);
+            
+        
+
+        marker_8acc76be39297f4a910cfc63f74927d1.bindPopup(popup_8ed46eba252382536d7267938e5d207c)
+        ;
+
+        
+    
+    
+                marker_8acc76be39297f4a910cfc63f74927d1.setIcon(icon_58f2405762c126d3d6306b5d99c9abac);
+            
+    
+            var marker_0a2906a3f2b0e8619480e99ae604f798 = L.marker(
+                [49.133585674333666, 1.5227963451258202],
+                {
+}
+            ).addTo(map_eeb9326d7733ddced6d976cea0c93833);
+        
+    
+            var icon_1d6d607ec2d8691c1f0060ba2f3e866d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_661e55a39454b09ca036573b6d1a6dc2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ea2dd5b7cd0895a564b4556025aa570d = $(`<div id="html_ea2dd5b7cd0895a564b4556025aa570d" style="width: 100.0%; height: 100.0%;">Arrivée</div>`)[0];
+                popup_661e55a39454b09ca036573b6d1a6dc2.setContent(html_ea2dd5b7cd0895a564b4556025aa570d);
+            
+        
+
+        marker_0a2906a3f2b0e8619480e99ae604f798.bindPopup(popup_661e55a39454b09ca036573b6d1a6dc2)
+        ;
+
+        
+    
+    
+                marker_0a2906a3f2b0e8619480e99ae604f798.setIcon(icon_1d6d607ec2d8691c1f0060ba2f3e866d);
+            
+</script>
+</html>
