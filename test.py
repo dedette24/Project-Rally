@@ -78,9 +78,9 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
     full_point_data = []
 
     i = 1
-    seuil_angle_min = 15  # Augmenté de 10 à 15
-    seuil_angle_total = 30  # Augmenté de 20 à 30
-    distance_max_virage = 200  # NOUVEAU: Distance maximale pour considérer un virage (en mètres)
+    seuil_angle_min = 10  # Augmenté de 10 à 15
+    seuil_angle_total = 15  # Augmenté de 20 à 30
+    distance_max_virage = 75  # NOUVEAU: Distance maximale pour considérer un virage (en mètres)
 
     while i < len(coordinates) - 1:
         p0 = np.array(coordinates[i - 1])
@@ -163,13 +163,13 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
             color = "orange"
         elif angle_final < 135:  # Augmenté de 120 à 135
             note = f"{direction} 3"
-            color = "darkorange"
+            color = "red"
         elif angle_final < 165:  # Augmenté de 150 à 165
             note = f"{direction} 2"
-            color = "red"
+            color = "darkred"
         else:
             note = f"épingle {direction} | 1"
-            color = "#800000"
+            color = "purple"
 
         # Ajouter les 2 marqueurs : début + fin
         folium.Marker(

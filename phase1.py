@@ -5,7 +5,7 @@ from geopy.distance import geodesic
 
 # === Coordonnées de départ et d'arrivée ===
 debut = (49.060418927265914, 1.5994303744710572)
-fin = (49.06855955197321, 1.6009684049876223)
+fin = (48.826810021473705, 1.331220342850973)
 
 DISTANCE = 20
 

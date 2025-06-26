@@ -30,9 +30,9 @@ def interpoler_points(coordinates, distance=DISTANCE):
         p0 = np.array(coordinates[i])
         p1 = np.array(coordinates[i + 1])
         
-        # Convertir en (lat, lon) pour calcul géodésique
+        """# Convertir en (lat, lon) pour calcul géodésique
         lat0, lon0 = p0[1], p0[0]
-        lat1, lon1 = p1[1], p1[0]
+        lat1, lon1 = p1[1], p1[0]"""
         
         segment_length = distance_geodesique(p0, p1)
         
@@ -78,9 +78,9 @@ def recup_itineraire_complet(depart_coordonne, arrive_coordonne):
     full_point_data = []
 
     i = 1
-    seuil_angle_min = 8  # Réduit pour détecter plus de virages
-    seuil_angle_total = 15  # Réduit pour détecter plus de virages
-    distance_max_virage = 200  # NOUVEAU: Distance maximale pour considérer un virage (en mètres)
+    seuil_angle_min = 10  # Réduit pour détecter plus de virages
+    seuil_angle_total = 20  # Réduit pour détecter plus de virages
+    distance_max_virage = 150  # NOUVEAU: Distance maximale pour considérer un virage (en mètres)
 
     while i < len(coordinates) - 1:
         p0 = np.array(coordinates[i - 1])
